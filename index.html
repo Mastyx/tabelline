@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz delle Tabelline</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.5em;
+      }
+
+      .selection-screen,
+      .quiz-screen,
+      .result-screen {
+        display: none;
+      }
+
+      .selection-screen.active,
+      .quiz-screen.active,
+      .result-screen.active {
+        display: block;
+      }
+
+      .tabellina-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .tabellina-btn {
+        padding: 20px;
+        font-size: 1.2em;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+      }
+
+      .tabellina-btn:hover {
+        background: #764ba2;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .tutte-btn {
+        grid-column: 1 / -1;
+        background: #f093fb;
+      }
+
+      .tutte-btn:hover {
+        background: #f5576c;
+      }
+
+      .question-container {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .question-number {
+        color: #667eea;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+
+      .question {
+        font-size: 2.5em;
+        color: #333;
+        margin: 20px 0;
+        font-weight: bold;
+      }
+
+      .answers {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .answer-btn {
+        padding: 25px;
+        font-size: 1.5em;
+        background: #f0f0f0;
+        border: 3px solid transparent;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .answer-btn:hover {
+        background: #e0e0e0;
+        transform: scale(1.05);
+      }
+
+      .answer-btn.correct {
+        background: #4caf50;
+        color: white;
+        border-color: #2e7d32;
+      }
+
+      .answer-btn.wrong {
+        background: #f44336;
+        color: white;
+        border-color: #c62828;
+      }
+
+      .result-screen {
+        text-align: center;
+      }
+
+      .result-title {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .result-image {
+        max-width: 100%;
+        height: 300px;
+        object-fit: contain;
+        margin: 30px 0;
+        border-radius: 15px;
+      }
+
+      .score {
+        font-size: 1.5em;
+        color: #667eea;
+        margin: 20px 0;
+      }
+
+      .restart-btn {
+        padding: 15px 40px;
+        font-size: 1.2em;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+
+      .restart-btn:hover {
+        background: #764ba2;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: #e0e0e0;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #667eea;
+        transition: width 0.3s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>🎓 Quiz delle Tabelline</h1>
+
+      <!-- Schermata di selezione -->
+      <div class="selection-screen active">
+        <h2 style="text-align: center; margin-bottom: 20px; color: #333">
+          Scegli la tabellina:
+        </h2>
+        <div class="tabellina-grid">
+          <button class="tabellina-btn" onclick="startQuiz(1)">1</button>
+          <button class="tabellina-btn" onclick="startQuiz(2)">2</button>
+          <button class="tabellina-btn" onclick="startQuiz(3)">3</button>
+          <button class="tabellina-btn" onclick="startQuiz(4)">4</button>
+          <button class="tabellina-btn" onclick="startQuiz(5)">5</button>
+          <button class="tabellina-btn" onclick="startQuiz(6)">6</button>
+          <button class="tabellina-btn" onclick="startQuiz(7)">7</button>
+          <button class="tabellina-btn" onclick="startQuiz(8)">8</button>
+          <button class="tabellina-btn" onclick="startQuiz(9)">9</button>
+          <button class="tabellina-btn" onclick="startQuiz(10)">10</button>
+          <button class="tabellina-btn tutte-btn" onclick="startQuiz('tutte')">
+            🎯 TUTTE LE TABELLINE
+          </button>
+        </div>
+      </div>
+
+      <!-- Schermata quiz -->
+      <div class="quiz-screen">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="question-container">
+          <div class="question-number" id="questionNumber"></div>
+          <div class="question" id="question"></div>
+        </div>
+        <div class="answers" id="answers"></div>
+      </div>
+
+      <!-- Schermata risultati -->
+      <div class="result-screen">
+        <div class="result-title" id="resultTitle"></div>
+        <img class="result-image" id="resultImage" alt="Risultato" />
+        <div class="score" id="scoreText"></div>
+        <button class="restart-btn" onclick="restartQuiz()">
+          🔄 Ricomincia
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let currentTabellina = null;
+      let questions = [];
+      let currentQuestion = 0;
+      let correctAnswers = 0;
+      let wrongAnswers = 0;
+      let answered = false;
+
+      function startQuiz(tabellina) {
+        currentTabellina = tabellina;
+        currentQuestion = 0;
+        correctAnswers = 0;
+        wrongAnswers = 0;
+        generateQuestions();
+        showScreen("quiz");
+        showQuestion();
+      }
+
+      function generateQuestions() {
+        questions = [];
+
+        if (currentTabellina === "tutte") {
+          // 10 domande miste da tutte le tabelline
+          for (let i = 0; i < 10; i++) {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            questions.push({
+              num1: num1,
+              num2: num2,
+              correct: num1 * num2,
+            });
+          }
+        } else {
+          // 10 domande dalla tabellina selezionata
+          let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+          // Mescola l'array
+          nums.sort(() => Math.random() - 0.5);
+
+          for (let i = 0; i < 10; i++) {
+            questions.push({
+              num1: currentTabellina,
+              num2: nums[i],
+              correct: currentTabellina * nums[i],
+            });
+          }
+        }
+      }
+
+      function showQuestion() {
+        answered = false;
+        const q = questions[currentQuestion];
+
+        document.getElementById("questionNumber").textContent =
+          `Domanda ${currentQuestion + 1}/10`;
+        document.getElementById("question").textContent =
+          `${q.num1} × ${q.num2} = ?`;
+
+        // Aggiorna barra progresso
+        const progress = (currentQuestion / 10) * 100;
+        document.getElementById("progressFill").style.width = progress + "%";
+
+        // Genera risposte
+        const answers = generateAnswers(q.correct);
+        const answersContainer = document.getElementById("answers");
+        answersContainer.innerHTML = "";
+
+        answers.forEach((answer) => {
+          const btn = document.createElement("button");
+          btn.className = "answer-btn";
+          btn.textContent = answer;
+          btn.onclick = () => checkAnswer(answer, q.correct, btn);
+          answersContainer.appendChild(btn);
+        });
+      }
+
+      function generateAnswers(correct) {
+        const answers = [correct];
+
+        while (answers.length < 4) {
+          let wrong;
+          // Genera risposte sbagliate plausibili
+          const offset = Math.floor(Math.random() * 20) - 10;
+          wrong = correct + offset;
+
+          if (wrong > 0 && wrong <= 100 && !answers.includes(wrong)) {
+            answers.push(wrong);
+          }
+        }
+
+        // Mescola le risposte
+        return answers.sort(() => Math.random() - 0.5);
+      }
+
+      function checkAnswer(selected, correct, btn) {
+        if (answered) return;
+        answered = true;
+
+        const buttons = document.querySelectorAll(".answer-btn");
+
+        if (selected === correct) {
+          btn.classList.add("correct");
+          correctAnswers++;
+        } else {
+          btn.classList.add("wrong");
+          wrongAnswers++;
+
+          // Mostra la risposta corretta
+          buttons.forEach((b) => {
+            if (parseInt(b.textContent) === correct) {
+              b.classList.add("correct");
+            }
+          });
+        }
+
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < 10) {
+            showQuestion();
+          } else {
+            showResults();
+          }
+        }, 1500);
+      }
+
+      function showResults() {
+        showScreen("result");
+
+        const resultTitle = document.getElementById("resultTitle");
+        const resultImage = document.getElementById("resultImage");
+        const scoreText = document.getElementById("scoreText");
+
+        scoreText.textContent = `Hai risposto correttamente a ${correctAnswers}/10 domande`;
+
+        if (wrongAnswers > 3) {
+          resultTitle.textContent = "Sei un asino! 🐴";
+          resultTitle.style.color = "#f44336";
+          resultImage.src = "./img2.png";
+        } else if (wrongAnswers === 0) {
+          resultTitle.textContent = "PERFETTO! 🌟";
+          resultTitle.style.color = "#4caf50";
+          resultImage.src =
+            "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400&h=300&fit=crop";
+        } else {
+          resultTitle.textContent = "Bravo! 👏";
+          resultTitle.style.color = "#667eea";
+          resultImage.src = "./img1.png";
+        }
+      }
+
+      function showScreen(screen) {
+        document.querySelector(".selection-screen").classList.remove("active");
+        document.querySelector(".quiz-screen").classList.remove("active");
+        document.querySelector(".result-screen").classList.remove("active");
+
+        if (screen === "selection") {
+          document.querySelector(".selection-screen").classList.add("active");
+        } else if (screen === "quiz") {
+          document.querySelector(".quiz-screen").classList.add("active");
+        } else if (screen === "result") {
+          document.querySelector(".result-screen").classList.add("active");
+        }
+      }
+
+      function restartQuiz() {
+        showScreen("selection");
+      }
+    </script>
+  </body>
+</html>
