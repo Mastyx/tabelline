@@ -307,6 +307,11 @@
       let correctAnswers = 0;
       let wrongAnswers = 0;
       let answered = false;
+      // audio
+      const audioAsino = new Audio("./audio/asino_mestra.mp3");
+      const audioBravissimo = new Audio("./audio/bravissimo.mp3");
+      const audioPeccato = new Audio("./audio/peccato.mp3");
+      const vediamo = new Audio("./audio/vediamo.mp3");
 
       function startQuiz(tabellina) {
         currentTabellina = tabellina;
@@ -461,14 +466,26 @@
 
         if (wrongAnswers > 3) {
           resultTitle.textContent = "Sei un asino! 🐴";
+          audioAsino.currentTime = 0;
+          audioAsino
+            .play()
+            .catch((e) => console.log("Errore caricamento audio Asino", e));
           resultTitle.style.color = "#f44336";
           resultImage.src = "./img2.png";
         } else if (wrongAnswers === 0) {
           resultTitle.textContent = "PERFETTO! 🌟";
+          audioBravissimo.currentTime = 0;
+          audioBravissimo
+            .play()
+            .catch((e) => console.log("Errore caricamento Bravissimo ", e));
           resultTitle.style.color = "#4caf50";
           resultImage.src = "./img1.png";
         } else {
           resultTitle.textContent = "Bravo! 👏";
+          audioPeccato.currentTime = 0;
+          audioPeccato
+            .play()
+            .catch((e) => console.log("Errore caricamento Peccato", e));
           resultTitle.style.color = "#667eea";
           resultImage.src = "./img3.png";
         }
